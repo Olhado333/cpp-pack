@@ -1,8 +1,13 @@
 use std::env::current_dir;
+use std::ffi::OsStr;
 use std::fs;
 use std::path::PathBuf;
 
 mod write_zip;
+
+fn valid_extention(ext: &OsStr) -> bool {
+    ["cpp", "h", "txt"].iter().map(OsStr::new).any(|x| ext == x)
+}
 
 fn main() {
     let root_directory: PathBuf = current_dir().expect("Could not find directory.");
@@ -13,7 +18,7 @@ fn main() {
         .filter(|x| {
             match x.extension() {
                 None => false,
-                Some(ext) => ext == "cpp" || ext == "h",
+                Some(ext) => valid_extention(ext),
             }
         })
         .collect();
